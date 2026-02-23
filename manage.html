@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>链接管理 - 上网导航</title>
+    <meta name="keywords" content="链接管理,网站管理,导航站管理">
+    <meta name="description" content="管理已收录的网站链接">
+    <link href="yibazhan/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="yibazhan/css/style.css?v=20240414.css" type="text/css">
+    <style>
+
+        .container {
+            margin-top: 50px;
+            max-width: 1000px;
+        }
+        .manage-form {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            vertical-align: middle;
+        }
+        select.form-control {
+            padding: 8px 10px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+    <div class="banner-video">
+        <img src="yibazhan/images/16888021762690432.png">        <div class="bottom-cover" style="background-image: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0) 100%);">
+        </div>
+    </div>
+<body>
+    <div class="container">
+        <div class="manage-form">
+            <h2 class="text-center mb-4">链接管理</h2>
+            
+            <!-- 密码验证 -->
+            <div id="passwordForm" class="mb-4">
+                <div class="form-group">
+                    <label class="form-label" for="password">管理密码</label>
+                    <input type="password" class="form-control" id="password" placeholder="请输入密码以管理链接" required>
+                </div>
+                <button id="verifyPassword" class="btn-primary">验证密码</button>
+            </div>
+            
+            <!-- 管理功能 -->
+            <div id="managementSection" style="display: none;">
+                <!-- 搜索和筛选 -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="searchWebsite" placeholder="搜索网站名称或地址">
+                    </div>
+                    <div class="col-md-6">
+                        <select class="form-control" id="filterCategory">
+                            <option value="">所有分类</option>
+                            <option value="group_1">常用导航</option>
+                            <option value="group_2">设计视觉</option>
+                            <option value="group_3">社交&存储</option>
+                            <option value="group_4">工具</option>
+                            <option value="group_5">开发</option>
+                            <option value="group_6">游戏娱乐</option>
+                            <option value="group_7">网站公告</option>
+                            <option value="group_8">源码</option>
+                            <option value="custom">自定义分类</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="mb-4">
+                    <button id="loadWebsites" class="btn-primary">加载所有网站</button>
+                    <button id="refreshWebsites" class="btn-primary ml-2">刷新数据</button>
+                </div>
+                
+                <!-- 网站列表 -->
+                <div id="websiteList" class="table-responsive">
+                    <p class="text-center">请点击"加载所有网站"按钮查看已收录的网站</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 编辑表单 -->
+        <div class="manage-form" id="editForm" style="display: none;">
+            <h3 class="text-center mb-4">编辑网站信息</h3>
+            <form id="websiteEditForm">
+                <input type="hidden" id="editWebsiteId">
+                
+                <div class="form-group">
+                    <label class="form-label" for="editWebsiteName">网站名称</label>
+                    <input type="text" class="form-control" id="editWebsiteName" placeholder="请输入网站名称" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="editWebsiteUrl">网站地址</label>
+                    <input type="url" class="form-control" id="editWebsiteUrl" placeholder="请输入网站地址，如 https://www.example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="editIconUrl">图标链接</label>
+                    <input type="url" class="form-control" id="editIconUrl" placeholder="请输入图标链接，如 https://www.example.com/favicon.ico">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">网站分类</label>
+                    <select class="form-control" id="editCategory" required>
+                        <option value="">请选择分类</option>
+                        <option value="group_1">常用导航</option>
+                        <option value="group_2">设计视觉</option>
+                        <option value="group_3">社交&存储</option>
+                        <option value="group_4">工具</option>
+                        <option value="group_5">开发</option>
+                        <option value="group_6">游戏娱乐</option>
+                        <option value="group_7">网站公告</option>
+                        <option value="group_8">源码</option>
+                        <option value="custom">自定义分类</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="editNewCategoryGroup">
+                    <label class="form-label" for="editNewCategory">自定义分类名称</label>
+                    <input type="text" class="form-control" id="editNewCategory" placeholder="请输入自定义分类名称">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="editFontColor">字体颜色</label>
+                    <input type="color" class="form-control" id="editFontColor" value="#333333">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="editPassword">确认密码</label>
+                    <input type="password" class="form-control" id="editPassword" placeholder="请输入密码以确认修改" required>
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="btn-primary">保存修改</button>
+                    <button type="button" id="cancelEdit" class="btn-primary ml-2">取消</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="index.html" class="btn-primary">返回首页</a>
+            <a href="apply.html" class="btn-primary ml-2">申请收录</a>
+        </div>
+    </div>
+    
+    <script src="yibazhan/js/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 初始化
+            $('#editNewCategoryGroup').hide();
+            
+            // 密码验证
+            $('#verifyPassword').click(function() {
+                const password = $('#password').val();
+                const encryptedPassword = btoa(password); // 简单的Base64编码模拟加密
+                
+                if (encryptedPassword !== 'b3UxMjMu') { // ou123. 的Base64编码
+                    alert('密码错误，请重新输入');
+                    return;
+                }
+                
+                // 密码正确，显示管理功能
+                $('#passwordForm').hide();
+                $('#managementSection').show();
+            });
+            
+            // 加载网站
+            $('#loadWebsites').click(function() {
+                loadWebsites();
+            });
+            
+            // 刷新数据
+            $('#refreshWebsites').click(function() {
+                loadWebsites();
+            });
+            
+            // 搜索网站
+            $('#searchWebsite').keyup(function() {
+                filterWebsites();
+            });
+            
+            // 筛选分类
+            $('#filterCategory').change(function() {
+                filterWebsites();
+            });
+            
+            // 编辑分类选择
+            $('#editCategory').change(function() {
+                if ($(this).val() === 'custom') {
+                    $('#editNewCategory').prop('required', true);
+                    $('#editNewCategoryGroup').show();
+                } else {
+                    $('#editNewCategory').prop('required', false);
+                    $('#editNewCategoryGroup').hide();
+                }
+            });
+            
+            // 取消编辑
+            $('#cancelEdit').click(function() {
+                $('#editForm').hide();
+                $('#managementSection').show();
+            });
+            
+            // 编辑表单提交
+            $('#websiteEditForm').submit(function(e) {
+                e.preventDefault();
+                
+                const editPassword = $('#editPassword').val();
+                const encryptedPassword = btoa(editPassword);
+                
+                if (encryptedPassword !== 'b3UxMjMu') {
+                    alert('密码错误，请重新输入');
+                    return;
+                }
+                
+                updateWebsite();
+            });
+        });
+        
+        // 加载网站
+        function loadWebsites() {
+            // 显示加载中
+            $('#websiteList').html('<p class="text-center">加载中...</p>');
+            
+            // 从localStorage加载数据
+            let savedWebsites = JSON.parse(localStorage.getItem('savedWebsites') || '[]');
+            
+            // 同时从Cloudflare KV加载数据
+            loadFromCloudflareKV().then(cloudflareWebsites => {
+                if (cloudflareWebsites && cloudflareWebsites.length > 0) {
+                    savedWebsites = cloudflareWebsites;
+                    // 保存到localStorage
+                    localStorage.setItem('savedWebsites', JSON.stringify(savedWebsites));
+                }
+                
+                displayWebsites(savedWebsites);
+            }).catch(error => {
+                console.error('从Cloudflare KV加载失败:', error);
+                displayWebsites(savedWebsites);
+            });
+        }
+        
+        // 显示网站列表
+        function displayWebsites(websites) {
+            if (websites.length === 0) {
+                $('#websiteList').html('<p class="text-center">暂无收录的网站</p>');
+                return;
+            }
+            
+            let html = '<table class="table table-striped">';
+            html += '<thead><tr><th>网站名称</th><th>网站地址</th><th>分类</th><th>操作</th></tr></thead>';
+            html += '<tbody>';
+            
+            websites.forEach(function(website, index) {
+                const categoryName = website.newCategory || getCategoryName(website.category);
+                html += `<tr data-index="${index}" data-id="${website.id}" data-name="${website.name}" data-url="${website.url}" data-category="${website.category}">`;
+                html += `<td>${website.name}</td>`;
+                html += `<td><a href="${website.url}" target="_blank">${website.url}</a></td>`;
+                html += `<td>${categoryName}</td>`;
+                html += `<td>`;
+                html += `<button class="btn btn-warning edit-website" data-index="${index}">编辑</button>`;
+                html += `<button class="btn btn-danger delete-website" data-index="${index}" data-id="${website.id}">删除</button>`;
+                html += `</td>`;
+                html += `</tr>`;
+            });
+            
+            html += '</tbody></table>';
+            $('#websiteList').html(html);
+            
+            // 绑定编辑按钮
+            $('.edit-website').click(function() {
+                const index = $(this).data('index');
+                editWebsite(index);
+            });
+            
+            // 绑定删除按钮
+            $('.delete-website').click(function() {
+                const index = $(this).data('index');
+                const id = $(this).data('id');
+                deleteWebsite(index, id);
+            });
+        }
+        
+        // 编辑网站
+        function editWebsite(index) {
+            const savedWebsites = JSON.parse(localStorage.getItem('savedWebsites') || '[]');
+            const website = savedWebsites[index];
+            
+            // 填充表单
+            $('#editWebsiteId').val(website.id);
+            $('#editWebsiteName').val(website.name);
+            $('#editWebsiteUrl').val(website.url);
+            $('#editIconUrl').val(website.icon);
+            $('#editCategory').val(website.category);
+            $('#editNewCategory').val(website.newCategory);
+            $('#editFontColor').val(website.fontColor || '#333333');
+            
+            // 显示/隐藏新分类输入框
+            if (website.category === 'custom') {
+                $('#editNewCategory').prop('required', true);
+                $('#editNewCategoryGroup').show();
+            } else {
+                $('#editNewCategory').prop('required', false);
+                $('#editNewCategoryGroup').hide();
+            }
+            
+            // 显示编辑表单
+            $('#managementSection').hide();
+            $('#editForm').show();
+        }
+        
+        // 更新网站
+        function updateWebsite() {
+            const id = $('#editWebsiteId').val();
+            const name = $('#editWebsiteName').val();
+            const url = $('#editWebsiteUrl').val();
+            const icon = $('#editIconUrl').val();
+            const category = $('#editCategory').val();
+            const newCategory = $('#editNewCategory').val();
+            const fontColor = $('#editFontColor').val();
+            
+            // 准备更新数据
+            const updatedWebsite = {
+                id: id,
+                name: name,
+                url: url,
+                icon: icon,
+                category: category === 'custom' ? '' : category,
+                newCategory: category === 'custom' ? newCategory : '',
+                fontColor: fontColor
+            };
+            
+            // 从localStorage获取数据
+            let savedWebsites = JSON.parse(localStorage.getItem('savedWebsites') || '[]');
+            
+            // 找到并更新网站
+            const index = savedWebsites.findIndex(website => website.id === id);
+            if (index !== -1) {
+                savedWebsites[index] = updatedWebsite;
+                
+                // 保存到localStorage
+                localStorage.setItem('savedWebsites', JSON.stringify(savedWebsites));
+                
+                // 保存到Cloudflare KV
+                saveToCloudflareKV(updatedWebsite, index);
+                
+                alert('修改成功！');
+                
+                // 隐藏编辑表单，显示管理功能
+                $('#editForm').hide();
+                $('#managementSection').show();
+                
+                // 重新加载网站列表
+                loadWebsites();
+            } else {
+                alert('未找到要更新的网站！');
+            }
+        }
+        
+        // 删除网站
+        function deleteWebsite(index, id) {
+            if (confirm('确定要删除这个网站吗？此操作不可恢复！')) {
+                // 从localStorage删除
+                let savedWebsites = JSON.parse(localStorage.getItem('savedWebsites') || '[]');
+                savedWebsites.splice(index, 1);
+                localStorage.setItem('savedWebsites', JSON.stringify(savedWebsites));
+                
+                // 从Cloudflare KV删除
+                deleteFromCloudflareKV(id);
+                
+                alert('删除成功！');
+                
+                // 重新加载网站列表
+                loadWebsites();
+            }
+        }
+        
+        // 筛选网站
+        function filterWebsites() {
+            const searchTerm = $('#searchWebsite').val().toLowerCase();
+            const filterCategory = $('#filterCategory').val();
+            
+            $('table tbody tr').each(function() {
+                const name = $(this).data('name').toLowerCase();
+                const url = $(this).data('url').toLowerCase();
+                const category = $(this).data('category');
+                
+                const matchesSearch = name.includes(searchTerm) || url.includes(searchTerm);
+                const matchesCategory = !filterCategory || category === filterCategory;
+                
+                if (matchesSearch && matchesCategory) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+        
+        // 获取分类名称
+        function getCategoryName(categoryId) {
+            const categoryMap = {
+                'group_1': '常用导航',
+                'group_2': '设计视觉',
+                'group_3': '社交&存储',
+                'group_4': '工具',
+                'group_5': '开发',
+                'group_6': '游戏娱乐',
+                'group_8': '源码'
+            };
+            return categoryMap[categoryId] || categoryId;
+        }
+        
+        // 从本地Worker加载数据
+        function loadFromCloudflareKV() {
+            return new Promise((resolve, reject) => {
+                try {
+                    // 本地测试模式：从localStorage加载
+                    const savedWebsites = JSON.parse(localStorage.getItem('savedWebsites') || '[]');
+                    console.log('从localStorage加载数据:', savedWebsites);
+                    resolve(savedWebsites);
+                } catch (error) {
+                    console.error('加载失败:', error);
+                    reject(error);
+                }
+            });
+        }
+        
+        // 保存到本地Worker
+        function saveToCloudflareKV(websiteData, index) {
+            try {
+                // 本地测试模式：使用localStorage存储
+                const existingWebsites = JSON.parse(localStorage.getItem('savedWebsites') || '[]');
+                if (index >= 0 && index < existingWebsites.length) {
+                    existingWebsites[index] = websiteData;
+                    localStorage.setItem('savedWebsites', JSON.stringify(existingWebsites));
+                    console.log('网站更新成功（本地模式）:', websiteData);
+                }
+            } catch (error) {
+                console.error('保存失败:', error);
+            }
+        }
+        
+        // 从本地Worker删除
+        function deleteFromCloudflareKV(websiteId) {
+            try {
+                // 本地测试模式：使用localStorage存储
+                const existingWebsites = JSON.parse(localStorage.getItem('savedWebsites') || '[]');
+                const filteredWebsites = existingWebsites.filter(website => website.id !== websiteId);
+                localStorage.setItem('savedWebsites', JSON.stringify(filteredWebsites));
+                console.log('网站删除成功（本地模式）:', websiteId);
+            } catch (error) {
+                console.error('删除失败:', error);
+            }
+        }
+    </script>
+</body>
+</html>

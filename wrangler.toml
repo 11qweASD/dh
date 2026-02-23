@@ -1,0 +1,9 @@
+name = "dh"
+main = "yibazhan/js/worker.js"
+compatibility_date = "2025-11-04"
+keep_vars = true
+
+[[kv_namespaces]]
+binding = "WEBSITES_KV"
+id = "7d55b8bd29af4ccb9259169cb2c87424"
+

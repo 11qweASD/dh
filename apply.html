@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>申请收录 - 上网导航</title>
+    <meta name="keywords" content="申请收录,网站收录,导航站收录">
+    <meta name="description" content="申请将您的网站收录到我们的导航站">
+    <link href="yibazhan/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="yibazhan/css/style.css?v=20240414.css" type="text/css">
+    <style>
+        .container {
+            margin-top: 50px;
+            max-width: 800px;
+        }
+        .apply-form {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        select.form-control {
+            padding: 8px 10px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner-video">
+        <img src="yibazhan/images/16888021762690432.png">        <div class="bottom-cover" style="background-image: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0) 100%);">
+        </div>
+    </div>
+    <div class="container">
+        <div class="apply-form">
+            <h2 class="text-center mb-4">申请收录</h2>
+            <p class="text-center mb-4">请填写以下信息申请将您的网站收录到我们的导航站</p>
+            
+            <form id="applyForm">
+                <div class="form-group">
+                    <label class="form-label" for="websiteName">网站名称</label>
+                    <input type="text" class="form-control" id="websiteName" placeholder="请输入您的网站名称" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="websiteUrl">网站地址</label>
+                    <input type="url" class="form-control" id="websiteUrl" placeholder="请输入您的网站地址，如 https://www.example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="iconUrl">图标链接</label>
+                    <input type="url" class="form-control" id="iconUrl" placeholder="请输入您的网站图标链接，如 https://www.example.com/favicon.ico">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">网站分类</label>
+                    <select class="form-control" id="category" required>
+                        <option value="">请选择分类</option>
+                        <option value="group_1">常用导航</option>
+                        <option value="group_2">设计视觉</option>
+                        <option value="group_3">社交&存储</option>
+                        <option value="group_4">工具</option>
+                        <option value="group_5">开发</option>
+                        <option value="group_6">游戏娱乐</option>
+                        <option value="group_7">网站公告</option>
+                        <option value="group_8">源码</option>
+                        <option value="custom">自定义分类</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="newCategoryGroup">
+                    <label class="form-label" for="newCategory">自定义分类名称</label>
+                    <input type="text" class="form-control" id="newCategory" placeholder="请输入自定义分类名称">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">验证密码</label>
+                    <input type="password" class="form-control" id="password" placeholder="请输入密码以提交申请" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="fontColor">字体颜色</label>
+                    <input type="color" class="form-control" id="fontColor" value="#333333">
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="btn-primary">提交申请</button>
+                </div>
+            </form>
+            
+            <div class="success-message" id="successMessage">
+                <strong>提交成功！</strong>您的网站申请已提交，我们会尽快审核并收录。
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                <strong>提交失败！</strong>请检查网络连接后重试。
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="index.html" class="btn-primary">返回首页</a>
+            <a href="manage.html" class="btn-primary ml-2">链接管理</a>
+        </div>
+    </div>
+    
+    <script src="yibazhan/js/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 初始化
+            $('#newCategoryGroup').hide();
+            
+            // 分类选择事件
+            $('#category').change(function() {
+                if ($(this).val() === 'custom') {
+                    $('#newCategory').prop('required', true);
+                    $('#newCategoryGroup').show();
+                } else {
+                    $('#newCategory').prop('required', false);
+                    $('#newCategoryGroup').hide();
+                }
+            });
+            
+            // 表单提交事件
+            $('#applyForm').submit(function(e) {
+                e.preventDefault();
+                
+                // 验证密码
+                const password = $('#password').val();
+                const encryptedPassword = btoa(password); // 简单的Base64编码模拟加密
+                
+                if (encryptedPassword !== 'b3UxMjMu') { // ou123. 的Base64编码
+                    alert('密码错误，请重新输入');
+                    return;
+                }
+                
+                // 获取表单数据
+                const websiteName = $('#websiteName').val();
+                const websiteUrl = $('#websiteUrl').val();
+                const iconUrl = $('#iconUrl').val();
+                const category = $('#category').val();
+                const newCategory = $('#newCategory').val();
+                const fontColor = $('#fontColor').val();
+                
+                // 构建网站数据
+                const websiteData = {
+                    id: Date.now(),
+                    name: websiteName,
+                    url: websiteUrl,
+                    icon: iconUrl,
+                    category: category === 'custom' ? '' : category,
+                    newCategory: category === 'custom' ? newCategory : '',
+                    fontColor: fontColor
+                };
+                
+                // 显示加载状态
+                $('#applyForm button[type="submit"]').text('提交中...').prop('disabled', true);
+                
+                // 本地测试模式：使用localStorage存储
+                try {
+                    // 从localStorage加载现有网站
+                    const existingWebsites = JSON.parse(localStorage.getItem('savedWebsites') || '[]');
+                    
+                    // 添加新网站
+                    existingWebsites.push(websiteData);
+                    
+                    // 保存回localStorage
+                    localStorage.setItem('savedWebsites', JSON.stringify(existingWebsites));
+                    
+                    // 显示成功消息
+                    $('#successMessage').show();
+                    $('#errorMessage').hide();
+                    
+                    // 重置表单
+                    $('#applyForm')[0].reset();
+                    $('#newCategoryGroup').hide();
+                    
+                    console.log('网站保存成功（本地模式）:', websiteData);
+                } catch (error) {
+                    console.error('保存失败:', error);
+                    // 显示错误消息
+                    $('#errorMessage').show();
+                    $('#successMessage').hide();
+                } finally {
+                    // 恢复按钮状态
+                    $('#applyForm button[type="submit"]').text('提交申请').prop('disabled', false);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
