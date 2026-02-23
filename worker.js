@@ -1,12 +1,6 @@
 // Cloudflare Worker for website submission (模块模式)
 export default {
-  async fetch(request, env) {
-    const value = await env.WEBSITES_KV.get("example_key");
-    return new Response(value || "Hello from Worker KV!", { status: 200 });
-  }
-};
-export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -172,8 +166,7 @@ export default {
         });
       }
 
-      // 如果KV中没有，尝试从本地文件系统读取（在Pages环境中）
-      // 注意：在纯Worker环境中，这部分可能需要调整
+      // 如果KV中没有，返回404
       return new Response('File not found', {
         status: 404,
         headers: {
