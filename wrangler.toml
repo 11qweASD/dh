@@ -1,19 +1,12 @@
-# Pages 专用配置
-name = "dh"
-type = "javascript"
+name = "dh-worker"
+main = "yibazhan/js/worker.js"
+compatibility_date = "2026-02-23"
 
-# 构建设置
-[build]
-# 静态网站输出目录
-pages_build_output_dir = "dist"
-# 构建命令，纯静态可留空；框架项目填 npm run build
-command = ""
+[assets]
+directory = "./dist" # 请确保路径是你的实际构建输出目录
 
-# Functions 目录
-[functions]
-directory = "functions"
+keep_vars = true
 
-# KV 命名空间
 [[kv_namespaces]]
 binding = "WEBSITES_KV"
 id = "7d55b8bd29af4ccb9259169cb2c87424"
