@@ -1,5 +1,10 @@
 // Cloudflare Worker for website submission (模块模式)
-
+export default {
+  async fetch(request, env) {
+    const value = await env.WEBSITES_KV.get("example_key");
+    return new Response(value || "Hello from Worker KV!", { status: 200 });
+  }
+};
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
