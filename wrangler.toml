@@ -1,22 +1,13 @@
-# wrangler.toml - Cloudflare Pages + Worker KV 配置
-
 name = "dh-pages"
-type = "javascript"        # Pages 会识别 JS 类型
+type = "javascript"
 
 [build]
-# 构建命令：纯静态可留空，框架项目填写 npm run build
-command = "npm run build"
-pages_build_output_dir = "dist"   # 构建输出目录
+pages_build_output_dir = "dist"
+command = ""  # 纯静态可留空，框架项目写 npm run build
 
-[dev]
-port = 8787
-local_protocol = "http"
-
-# Worker Functions 目录
 [functions]
-directory = "functions"
+directory = "functions"  # 如果有 Worker 函数
 
-# KV 命名空间
 [[kv_namespaces]]
 binding = "WEBSITES_KV"
 id = "7d55b8bd29af4ccb9259169cb2c87424"
