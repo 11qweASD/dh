@@ -1,9 +1,8 @@
 name = "dh-worker"
-main = "yibazhan/js/worker.js"
 compatibility_date = "2026-02-23"
 
 [assets]
-directory = "./dist" # 请确保路径是你的实际构建输出目录
+directory = "./dist"
 
 keep_vars = true
 
