@@ -3,10 +3,10 @@ type = "javascript"
 
 [build]
 pages_build_output_dir = "dist"
-command = ""  # 纯静态可留空，框架项目写 npm run build
+command = ""  # 静态网站可留空，框架项目写 npm run build
 
 [functions]
-directory = "functions"  # 如果有 Worker 函数
+directory = "functions"
 
 [[kv_namespaces]]
 binding = "WEBSITES_KV"
