@@ -1,9 +1,22 @@
-name = "dh"
-main = "yibazhan/js/worker.js"
-compatibility_date = "2025-11-04"
-keep_vars = true
+# wrangler.toml - Cloudflare Pages + Worker KV 配置
 
+name = "dh-pages"
+type = "javascript"        # Pages 会识别 JS 类型
+
+[build]
+# 构建命令：纯静态可留空，框架项目填写 npm run build
+command = "npm run build"
+pages_build_output_dir = "dist"   # 构建输出目录
+
+[dev]
+port = 8787
+local_protocol = "http"
+
+# Worker Functions 目录
+[functions]
+directory = "functions"
+
+# KV 命名空间
 [[kv_namespaces]]
 binding = "WEBSITES_KV"
 id = "7d55b8bd29af4ccb9259169cb2c87424"
-
